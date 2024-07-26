@@ -20766,6 +20766,34 @@ function ActrisProtocol_nov_2018, path,name,ProtData,masses, ProtEngData , engna
   if (ErrCode eq 0) then   write_jpeg, path2+'TRANS '+PTRid+'_'+Datumzeit+'.jpg',tvrd(0,true=1), true=1
   WDELETE, 5
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   print, ''
 
 

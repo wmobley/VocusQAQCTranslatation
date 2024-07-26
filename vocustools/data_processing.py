@@ -2793,32 +2793,3 @@ def quantile(x: List[float], p: Union[float, List[float]], type: int = 8, sorted
     # Lines 26429-26430: Return result
     return res[0] if is_scalar else res
 
-# Helper functions (to be implemented)
-def smooth_sum_spec(sum_spectrum, a, t0, ex, samp_int, instrument):
-    # Implement smoothing logic here
-    pass
-
-def find_peak_characteristics(deriv_data, i, step, thresh):
-    # Implement peak characteristic finding logic here
-    pass
-
-def clean_peak(data2, data3, i_peak_max, m_unit, peak_broadness, counts_max):
-    # Implement peak cleaning logic here
-    pass
-
-
-# Helper functions (to be implemented)
-def m2t(peaklist, a, t0, ex, sampint, time=False):
-    # Implement m2t function
-    pass
-
-
-
-def optimize_exponent(M1, M2, M3, Const):
-    # Implement exponent optimization
-    pass
-
-
-def generate_mass_variations(M1, M2, M3, var_ppm):
-    # Implement mass variation generation
-    pass

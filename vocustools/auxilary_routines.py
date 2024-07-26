@@ -1,14 +1,14 @@
 # Standard library imports
 import os
-import csv
 import re
 from datetime import datetime, timedelta
 from typing import List, Union, Dict, Tuple, Any, Optional
-
+import time
+import glob
 # Third-party imports
 import h5py
 import matplotlib.pyplot as plt
-
+import numpy as np
 # Configuration
 plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
@@ -1217,7 +1217,7 @@ def MakeCsv(name: str, data: Union[List[List[str]], List[str]]) -> None:
     try:
         # Lines 13038-13052: Main CSV writing logic
         with open(name, 'w', newline='') as f:
-            writer = csv.writer(f)
+            
             
             # Determine if data is 2D or 1D
             if isinstance(data[0], list):
@@ -1228,7 +1228,7 @@ def MakeCsv(name: str, data: Union[List[List[str]], List[str]]) -> None:
                     # Add commas between columns, except for the last column
                     for i in range(len(row) - 1):
                         row[i] += ','
-                    writer.writerow(row)
+                    f.write(f"{row}\n")
             else:
                 # 1D data
                 # Convert all elements to strings and remove leading/trailing whitespace
@@ -1236,7 +1236,7 @@ def MakeCsv(name: str, data: Union[List[List[str]], List[str]]) -> None:
                 # Add commas between items, except for the last item
                 for i in range(len(data) - 1):
                     data[i] += ','
-                writer.writerow(data)
+                f.write(f"{row}\n")
         
         print(f"CSV file '{name}' has been created successfully.")
     
@@ -1405,7 +1405,7 @@ def ReadFloat(file: str) -> Union[List[float], float]:
     
     return data2
 
-def ReArrange(Data: List[float]) -> List[List[float]]:
+def rearrange(Data: List[float]) -> List[List[float]]:
     """
     Rearrange data into a 2D list.
     
