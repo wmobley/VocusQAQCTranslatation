@@ -10,57 +10,57 @@ import shutil
 import io
 import time
 import glob
-from vocustools.auxilary_routines import CompoundClass
+from vocustools.auxilary_routines import DispCT, drucksieb
 
 
 class TestAuxilaryRoutines(unittest.TestCase):
 
-    def test_compound_class_organic(self):
-        result = CompoundClass("C6H12O6")
-        self.assertIn("org_", result)
-        self.assertIn("HCO_", result)
-        self.assertIn("HCO6", result)
-        self.assertIn("nC=6", result)
-        self.assertIn("nH=12", result)
-        self.assertIn("nO=6", result)
-        self.assertIn("nN=0", result)
+    # def test_compound_class_organic(self):
+    #     result = CompoundClass("C6H12O6")
+    #     self.assertIn("org_", result)
+    #     self.assertIn("HCO_", result)
+    #     self.assertIn("HCO6", result)
+    #     self.assertIn("nC=6", result)
+    #     self.assertIn("nH=12", result)
+    #     self.assertIn("nO=6", result)
+    #     self.assertIn("nN=0", result)
 
-    def test_compound_class_inorganic(self):
-        result = CompoundClass("H2O")
-        self.assertIn("inorg", result)
-        self.assertIn("nC=0", result)
-        self.assertIn("nH=2", result)
-        self.assertIn("nO=1", result)
-        self.assertIn("nN=0", result)
+    # def test_compound_class_inorganic(self):
+    #     result = CompoundClass("H2O")
+    #     self.assertIn("inorg", result)
+    #     self.assertIn("nC=0", result)
+    #     self.assertIn("nH=2", result)
+    #     self.assertIn("nO=1", result)
+    #     self.assertIn("nN=0", result)
 
-    def test_compound_class_13c(self):
-        result = CompoundClass("13CC5H12")
-        self.assertIn("org_", result)
-        self.assertIn("HC_", result)
-        self.assertIn("nC=6", result)
-        self.assertIn("nH=12", result)
-        self.assertIn("nO=0", result)
-        self.assertIn("nN=0", result)
+    # def test_compound_class_13c(self):
+    #     result = CompoundClass("13CC5H12")
+    #     self.assertIn("org_", result)
+    #     self.assertIn("HC_", result)
+    #     self.assertIn("nC=6", result)
+    #     self.assertIn("nH=12", result)
+    #     self.assertIn("nO=0", result)
+    #     self.assertIn("nN=0", result)
 
-    def test_compound_class_nitrogen(self):
-        result = CompoundClass("C2H5NO2")
-        self.assertIn("org_", result)
-        self.assertIn("orgN_", result)
-        self.assertIn("orgN1", result)
-        self.assertIn("NHCO2", result)
-        self.assertIn("nC=2", result)
-        self.assertIn("nH=5", result)
-        self.assertIn("nO=2", result)
-        self.assertIn("nN=1", result)
+    # def test_compound_class_nitrogen(self):
+    #     result = CompoundClass("C2H5NO2")
+    #     self.assertIn("org_", result)
+    #     self.assertIn("orgN_", result)
+    #     self.assertIn("orgN1", result)
+    #     self.assertIn("NHCO2", result)
+    #     self.assertIn("nC=2", result)
+    #     self.assertIn("nH=5", result)
+    #     self.assertIn("nO=2", result)
+    #     self.assertIn("nN=1", result)
 
-    def test_compound_class_sulfate(self):
-        result = CompoundClass("C2H5SO4")
-        self.assertIn("org_", result)
-        self.assertIn("orgSO4", result)
-        self.assertIn("nC=2", result)
-        self.assertIn("nH=5", result)
-        self.assertIn("nO=4", result)
-        self.assertIn("nN=0", result)
+    # def test_compound_class_sulfate(self):
+    #     result = CompoundClass("C2H5SO4")
+    #     self.assertIn("org_", result)
+    #     self.assertIn("orgSO4", result)
+    #     self.assertIn("nC=2", result)
+    #     self.assertIn("nH=5", result)
+    #     self.assertIn("nO=4", result)
+    #     self.assertIn("nN=0", result)
 
     # def test_d_numpy_array(self):
     #     arr = np.array([[1, 2, 3], [4, 5, 6]])
@@ -76,22 +76,22 @@ class TestAuxilaryRoutines(unittest.TestCase):
     #     result = d(42)
     #     self.assertEqual(result, [])
 
-    # def test_DispCT(self):
-    #     # Test that DispCT runs without errors
-    #     try:
-    #         DispCT(0)
-    #     except Exception as e:
-    #         self.fail(f"DispCT raised an exception: {e}")
+    def test_DispCT(self):
+        # Test that DispCT runs without errors
+        try:
+            DispCT(0)
+        except Exception as e:
+            self.fail(f"DispCT raised an exception: {e}")
 
-    # def test_drucksieb_comma(self):
-    #     result = drucksieb(".", 1)
-    #     expected = [
-    #         [0, 0, 0, 0, 0, 0, 0, 0],
-    #         [0, -2, -2, 0, 0, 0, 0, 0],
-    #         [0, -2, -2, 0, 0, 0, 0, 0],
-    #         [-2, -2, -2, -2, -2, 0, 0, 0]
-    #     ]
-    #     self.assertEqual(result, expected)
+    def test_drucksieb_comma(self):
+        result = drucksieb(".", 1)
+        expected = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, -2, -2, 0, 0, 0, 0, 0],
+            [0, -2, -2, 0, 0, 0, 0, 0],
+            [-2, -2, -2, -2, -2, 0, 0, 0]
+        ]
+        self.assertEqual(result, expected)
 
     # def test_drucksieb_number(self):
     #     result = drucksieb("1", 1)

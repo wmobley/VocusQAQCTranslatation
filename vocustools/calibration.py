@@ -172,7 +172,7 @@ def smooth(data: List[float], window_size: int, edge_mirror: bool = False) -> Li
 
 
 
-def testSCALE(masses: List[float], lib: List[float], instrument: str, ions: List[float], devs: List[float]) -> Dict[str, Union[float, List[float]]]:
+def testSCALE(masses: List[float], lib: List[float], instrument: str, ions: List[float], devs: List[float]) -> dict[str, Union[float, List[float]]]:
     # Initialize parameters
     ppm: float = 20.0
     scor: float = 0.0
@@ -228,7 +228,7 @@ def testSCALE(masses: List[float], lib: List[float], instrument: str, ions: List
             scorppm /= 3
 
     # Create and return result structure (Lines 25902-25904)
-    s1: Dict[str, Union[float, List[float]]] = {
+    s1: dict[str, Union[float, List[float]]] = {
         'scor': scor,
         'scorppm': scorppm,
         'accuracy': accuracy,
@@ -239,7 +239,7 @@ def testSCALE(masses: List[float], lib: List[float], instrument: str, ions: List
 
 
 
-def testSCALE2(massesAll: List[float], lib: List[float], instrument: str, ions: List[float], devs: List[float]) -> Dict[str, Union[float, List[float]]]:
+def testSCALE2(massesAll: List[float], lib: List[float], instrument: str, ions: List[float], devs: List[float]) -> dict[str, Union[float, List[float]]]:
     # Lines 25910-25918: Set instrument-specific parameters
     ppm = 20.001
     LowDa = 0.0015

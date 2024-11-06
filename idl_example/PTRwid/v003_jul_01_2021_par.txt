@@ -1,0 +1,194 @@
+ _Selection=5
+
+INSTRUMENTS
+
+_INST01=IoniTOFqi
+_INST02=Vocus
+_INST03=Inst3
+_INST04=Inst4
+_INST05=Inst5
+_INST06=
+_INST07=
+_INST08=
+
+VOCUS
+
+_pdriftVOCUS=SSQ pressure m*
+_udriftVOCUS=QUAD3_RFAMPL m*
+_tdriftVOCUS=Reactor temp m*
+_AveragePrimIonsThresh=150000
+
+PATHS
+
+_#file1=20
+_H1_01nam=-9999
+_H1_01dat=/TimingData/BufTimes
+_H1_02nam=-9999
+_H1_02dat=/SPECdata/Times
+_H1_03nam=-9999
+_H1_03dat=/FullSpectra/SumSpectrum
+_H1_04nam=-9999
+_H1_04dat=/SPECdata/AverageSpec
+_H1_05nam=/PTR-Reaction/TwInfo
+_H1_05dat=/PTR-Reaction/TwData
+_H1_06nam=/AddTraces/PTR-Reaction/TwInfo
+_H1_06dat=/AddTraces/PTR-Reaction/TwData
+_H1_07nam=/AddTraces/PTR-Reaction/Info
+_H1_07dat=/AddTraces/PTR-Reaction/Data
+_H1_08nam=/PTR-Instrument/TwInfo
+_H1_08dat=/PTR-Instrument/TwData
+_H1_09nam=/AddTraces/PTR-Instrument/TwInfo
+_H1_09dat=/AddTraces/PTR-Instrument/TwData
+_H1_10nam=/AddTraces/PTR-Instrument/Info
+_H1_10dat=/AddTraces/PTR-Instrument/Data
+_H1_11nam=/PTR-Misc/TwInfo
+_H1_11dat=/PTR-Misc/TwData
+_H1_12nam=/AddTraces/PTR-Misc/TwInfo
+_H1_12dat=/AddTraces/PTR-Misc/TwData
+_H1_13nam=/AddTraces/PTR-Misc/Info
+_H1_13dat=/AddTraces/PTR-Misc/Data
+_H1_14nam=/AddTraces/OptionBOX/TwInfo
+_H1_14dat=/AddTraces/OptionBOX/TwData
+_H1_15nam=/AddTraces/OptionBOX/Info
+_H1_15dat=/AddTraces/OptionBOX/Data
+_H1_16nam=/AddTraces/Denuder/TwInfo
+_H1_16dat=/AddTraces/Denuder/TwData
+_H1_17nam=/AddTraces/Denuder/Info
+_H1_17dat=/AddTraces/Denuder/Data
+_H1_18nam=/TPS2/TwInfo
+_H1_18dat=/TPS2/TwData
+_H1_19nam=/Pressure/TwInfo
+_H1_19dat=/Pressure/TwData
+_H1_20nam=/AddTraces/LCU/Info
+_H1_20dat=/AddTraces/LCU/Data
+
+_#file2=3
+_H2_01nam=/PTR-Reaction/Info
+_H2_01dat=/PTR-Reaction/Data
+_H2_02nam=/PTR-Instrument/Info
+_H2_02dat=/PTR-Instrument/Data
+_H2_03nam=/PTR-Misc/Info
+_H2_03dat=/PTR-Misc/Data
+
+PTR DEFAULT VALUES
+
+_p_drift_default=2.4
+_u_drift_default=600
+_udx_default=35
+_t_drift_default=50
+_reactionlength=9.6
+_reduced_mobility=2.7
+
+TOF DEFAULT VALUES
+
+_useCRUDEdefault=0
+_CRUDEa=7356
+_CRUDEt0=-28190
+
+TIME INDEX
+
+_StartExperiment=2555
+_PeriodExperiment=60
+
+CRUDE CALIBRATION
+
+_PeaksToConsider=24
+
+TRANSMISSION ARCHIVE
+
+_UniqueCampaignName=default
+
+UNIFIED MASS LIST
+
+_PeakAnalysis=1
+_DefaultRes=4500
+_Desired_Min_Signal=1.0E6
+_Max_Time_Gap=10
+
+PS1 _ peak search
+
+_Min_Mass=10
+_SmFact=1
+
+PS2 _ unified mass list
+
+_LowThresh=0.05
+
+COMPOUND CLASS
+
+_N_ox_st=-1
+
+MassScsale Calibration Parameter Boundaries
+
+_default_a_1000=7800
+_default_a_8000=17300
+_default_t0_1000=-28500
+_default_t0_8000=750
+_exMin=0.49
+_exMax=0.500000015
+
+3-POINT MASS-SCALE-CALIBRATION 
+
+_M1a=21.0221
+_M1b=42.034
+_M2a=59.0491
+_M2b=116.906
+_M3a=203.943
+_M3b=355.0731
+_ForceThroughMaSet=0
+_tol_ppm=300
+
+Define up to 3 ions that are present in all spectra (and maximum allowed deviation from target m/z)
+set to zero if not used
+
+_ION1=21.0221
+_DEV1=0.002
+_ION2=59.049
+_DEV2=0.003
+_ION3=0
+_DEV3=0
+
+PEAK SHAPE
+
+_MinSig=800
+
+MIXING RATIO:
+
+_k19=3
+_k37=3
+_m38=1
+
+Transmission Fit:
+
+ _P0=9.1323863212E-02
+ _P1=4.2137768341E-03
+ _P2=-1.3332441405E-5
+ _P3=2.9151001160E-8
+ _P4=-3.4829484108E-11
+ _P5=2.0979046465E-14
+ _P6=-4.9852341527E-18
+
+EXPORT OPTIONS:
+
+_ExportOne=0
+_CorrectOverlap=1
+_SaveCsv=1
+_JunkSize=1.0E8
+
+CORRECTIONS:
+
+_DriftCorrection=0
+_CorrectionON=0
+_NonExtendingDeadTime=15
+_ExtendingDeadTime=1.3
+
+Custom procedure:
+
+_custprocname=PICAB
+
+ACTRIS GAS STANDARD PROTOCOL:
+
+_ApplyProtocol=0
+_TraceNameMarker=DO1
+_MarkerValue=1
+_Duration=8

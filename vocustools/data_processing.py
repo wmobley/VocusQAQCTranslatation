@@ -1,5 +1,7 @@
+import math
 import numpy as np
-
+from calibration import *
+from auxilary_routines import *
 def averaging(data, masslist, engdata, engnames, ind, carryover=None):
     """
     Perform averaging on the input data.
@@ -2656,7 +2658,7 @@ def ppm_bin(masslist: List[float], BinWidth_ppm: float) -> List[Tuple[float, flo
     # Lines 25409-25410: Split masslist into ppm and mDa ranges
     m_ppm = [m for m in masslist if m >= startppm]
     m_mDa = [m for m in masslist if start < m < startppm]
-
+    print(masslist, startppm)
     # Lines 25414-25425: Calculate ppm bins
     if m_ppm:
         m_start = [startppm * math.exp(BinWidth_ppm * i) for i in range(2000000)]

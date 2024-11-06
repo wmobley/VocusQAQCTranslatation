@@ -1194,7 +1194,7 @@ endelse
    
   if (helpi2 eq 1) then begin 
    
-          Namearker=getstr('TraceNameMarker')
+          NameMarker=getstr('TraceNameMarker')
         MarkerValue=getpar('MarkerValue')
         DurationProtocol=getpar('Duration')
        engdata=readFloat(strjoin([DestFolder,'Export/EngData/','EngData',Name1,'.fdt'],''))
@@ -11960,7 +11960,6 @@ for k=0,5 do begin
         for i=-25,25 do oplot, [i,i]+k*50,[0,1],thick=15,color=i+k*50
 endfor
 end
-
 function drucksieb, string,fontsize
 ; subroutine to write numbers into images
   komma=[1,2,4,5]

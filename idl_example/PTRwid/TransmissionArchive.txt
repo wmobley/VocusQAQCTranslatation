@@ -1,0 +1,12 @@
+transmission parameters stored by Instrunent ID and time
+time in days since Jan 1, 2009
+
+format1 (6 parameters): _InstrumentID=time, ex, mLOW, wLOW, mHigh, wHigh
+INFO: for details see https://doi.org/10.5194/amt-12-6193-2019
+
+format2 (14 parameters): _InstrumentID=time, a1,b1,c1,d1,e1,f1,g1,mass,a2,b2,c2,d2,e2
+INFO:
+ion weights below "mass" are fitted with a  6th order polinomial (tr= a1*m^6+b1*m^5+c1*m^4+d1*m^3+e1*m^2+f1*m+g1)
+ion weights above "mass" are fitted with a  4th order polinomial (tr=a2*m^4+b2*m^3+c2*m^2+d2*m+e2)
+
+_default=0,0.5,10,1,2000,1

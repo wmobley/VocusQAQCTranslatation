@@ -14,6 +14,319 @@ plt.rcParams['figure.facecolor'] = 'white'
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['font.size'] = 12
 
+import os
+import shutil
+
+import os
+import csv
+from datetime import date
+
+
+class PTRwidConfig:
+    def set_directories(self, date, version):
+        self.base_dir = os.path.join("idl_example", 'PTRwid')
+        self.parfile = os.path.join(self.base_dir, f'IDL_config_eg_{date}_par.txt')
+        self.codefile = os.path.join(self.base_dir, f'PTRwid_{version}_{date}.pro')
+
+
+config = PTRwidConfig()
+config.set_directories(date="jul_01_2021", version="v3_2_1")
+
+def check_match(text, pattern):
+    match = re.search(pattern, text)
+    if match:
+        return True
+    else:
+        return False
+
+
+def setup_ptrwid_files(version, date):
+    
+     # Create PTRwid directory if it doesn't exist
+    os.makedirs(config.base_dir, exist_ok=True)
+
+    # Write parfile path to parfile.txt
+    with open(os.path.join(config.base_dir,'parfile.txt'), 'w') as f:
+        f.write(config.parfile)
+
+    # Create TransmissionArchive.txt if it doesn't exist
+    if not os.path.exists(os.path.join(config.base_dir,'TransmissionArchive.txt')):
+        transmission_content = [
+            'transmission parameters stored by Instrunent ID and time',
+            'time in days since Jan 1, 2009',
+            '',
+            'format1 (6 parameters): _InstrumentID=time, ex, mLOW, wLOW, mHigh, wHigh',
+            'INFO: for details see https://doi.org/10.5194/amt-12-6193-2019',
+            '',
+            'format2 (14 parameters): _InstrumentID=time, a1,b1,c1,d1,e1,f1,g1,mass,a2,b2,c2,d2,e2',
+            'INFO:',
+            'ion weights below "mass" are fitted with a  6th order polinomial (tr= a1*m^6+b1*m^5+c1*m^4+d1*m^3+e1*m^2+f1*m+g1)',
+            'ion weights above "mass" are fitted with a  4th order polinomial (tr=a2*m^4+b2*m^3+c2*m^2+d2*m+e2)',
+            '',
+            '_default=0,0.5,10,1,2000,1'
+        ]
+        with open(os.path.join(config.base_dir,'TransmissionArchive.txt'), 'w') as f:
+            f.write('\n'.join(transmission_content))
+
+    # Create InstrumentID.txt if it doesn't exist
+    if not os.path.exists(os.path.join(config.base_dir,'InstrumentID.txt')):
+        with open(os.path.join(config.base_dir,'InstrumentID.txt'), 'w') as f:
+            f.write('default')
+    if not os.path.exists(config.parfile):
+        log = [
+            f'PTRwid_{version} released {date}',
+            'Default parfile has been created:',
+            config.parfile,
+            '',
+            'Values can be adjusted (advanced users only).'
+        ]
+
+        PTRwidParameter = [
+    ' _Selection=5',
+    '',
+    'INSTRUMENTS',
+    '',
+    '_INST01=IoniTOFqi',
+    '_INST02=Vocus',
+    '_INST03=Inst3',
+    '_INST04=Inst4',
+    '_INST05=Inst5',
+    '_INST06=',
+    '_INST07=',
+    '_INST08=',
+    '',
+    'VOCUS',
+    '',
+    '_pdriftVOCUS=SSQ pressure m*',
+    '_udriftVOCUS=QUAD3_RFAMPL m*',
+    '_tdriftVOCUS=Reactor temp m*',
+    '_AveragePrimIonsThresh=150000',
+    '',
+    'PATHS',
+    '',
+    '_#file1=20',
+    '_H1_01nam=-9999',
+    '_H1_01dat=/TimingData/BufTimes',
+    '_H1_02nam=-9999',
+    '_H1_02dat=/SPECdata/Times',
+    '_H1_03nam=-9999',
+    '_H1_03dat=/FullSpectra/SumSpectrum',
+    '_H1_04nam=-9999',
+    '_H1_04dat=/SPECdata/AverageSpec',
+    '_H1_05nam=/PTR-Reaction/TwInfo',
+    '_H1_05dat=/PTR-Reaction/TwData',
+    '_H1_06nam=/AddTraces/PTR-Reaction/TwInfo',
+    '_H1_06dat=/AddTraces/PTR-Reaction/TwData',
+    '_H1_07nam=/AddTraces/PTR-Reaction/Info',
+    '_H1_07dat=/AddTraces/PTR-Reaction/Data',
+    '_H1_08nam=/PTR-Instrument/TwInfo',
+    '_H1_08dat=/PTR-Instrument/TwData',
+    '_H1_09nam=/AddTraces/PTR-Instrument/TwInfo',
+    '_H1_09dat=/AddTraces/PTR-Instrument/TwData',
+    '_H1_10nam=/AddTraces/PTR-Instrument/Info',
+    '_H1_10dat=/AddTraces/PTR-Instrument/Data',
+    '_H1_11nam=/PTR-Misc/TwInfo',
+    '_H1_11dat=/PTR-Misc/TwData',
+    '_H1_12nam=/AddTraces/PTR-Misc/TwInfo',
+    '_H1_12dat=/AddTraces/PTR-Misc/TwData',
+    '_H1_13nam=/AddTraces/PTR-Misc/Info',
+    '_H1_13dat=/AddTraces/PTR-Misc/Data',
+    '_H1_14nam=/AddTraces/OptionBOX/TwInfo',
+    '_H1_14dat=/AddTraces/OptionBOX/TwData',
+    '_H1_15nam=/AddTraces/OptionBOX/Info',
+    '_H1_15dat=/AddTraces/OptionBOX/Data',
+    '_H1_16nam=/AddTraces/Denuder/TwInfo',
+    '_H1_16dat=/AddTraces/Denuder/TwData',
+    '_H1_17nam=/AddTraces/Denuder/Info',
+    '_H1_17dat=/AddTraces/Denuder/Data',
+    '_H1_18nam=/TPS2/TwInfo',
+    '_H1_18dat=/TPS2/TwData',
+    '_H1_19nam=/Pressure/TwInfo',
+    '_H1_19dat=/Pressure/TwData',
+    '_H1_20nam=/AddTraces/LCU/Info',
+    '_H1_20dat=/AddTraces/LCU/Data',
+    '',
+    '_#file2=3',
+    '_H2_01nam=/PTR-Reaction/Info',
+    '_H2_01dat=/PTR-Reaction/Data',
+    '_H2_02nam=/PTR-Instrument/Info',
+    '_H2_02dat=/PTR-Instrument/Data',
+    '_H2_03nam=/PTR-Misc/Info',
+    '_H2_03dat=/PTR-Misc/Data',
+    '',
+    'PTR DEFAULT VALUES',
+    '',
+    '_p_drift_default=2.4',
+    '_u_drift_default=600',
+    '_udx_default=35',
+    '_t_drift_default=50',
+    '_reactionlength=9.6',
+    '_reduced_mobility=2.7',
+    '',
+    'TOF DEFAULT VALUES',
+    '',
+    '_useCRUDEdefault=0',
+    '_CRUDEa=7356',
+    '_CRUDEt0=-28190',
+    '',
+    'TIME INDEX',
+    '',
+    '_StartExperiment=2555',
+    '_PeriodExperiment=60',
+    '',
+    'CRUDE CALIBRATION',
+    '',
+    '_PeaksToConsider=24',
+    '',
+    'TRANSMISSION ARCHIVE',
+    '',
+    '_UniqueCampaignName=default',
+    '',
+    'UNIFIED MASS LIST',
+    '',
+    '_PeakAnalysis=1',
+    '_DefaultRes=4500',
+    '_Desired_Min_Signal=1.0E6',
+    '_Max_Time_Gap=10',
+    '',
+    'PS1 _ peak search',
+    '',
+    '_Min_Mass=10',
+    '_SmFact=1',
+    '',
+    'PS2 _ unified mass list',
+    '',
+    '_LowThresh=0.05',
+    '',
+    'COMPOUND CLASS',
+    '',
+    '_N_ox_st=-1',
+    '',
+    'MassScsale Calibration Parameter Boundaries',
+    '',
+    '_default_a_1000=7800',
+    '_default_a_8000=17300',
+    '_default_t0_1000=-28500',
+    '_default_t0_8000=750',
+    '_exMin=0.49',
+    '_exMax=0.500000015',
+    '',
+    '3-POINT MASS-SCALE-CALIBRATION ',
+    '',
+    '_M1a=21.0221',
+    '_M1b=42.034',
+    '_M2a=59.0491',
+    '_M2b=116.906',
+    '_M3a=203.943',
+    '_M3b=355.0731',
+    '_ForceThroughMaSet=0',
+    '_tol_ppm=300',
+    '',
+    'Define up to 3 ions that are present in all spectra (and maximum allowed deviation from target m/z)',
+    'set to zero if not used',
+    '',
+    '_ION1=21.0221',
+    '_DEV1=0.002',
+    '_ION2=59.049',
+    '_DEV2=0.003',
+    '_ION3=0',
+    '_DEV3=0',
+    '',
+    'PEAK SHAPE',
+    '',
+    '_MinSig=800',
+    '',
+    'MIXING RATIO:',
+    '',
+    '_k19=3',
+    '_k37=3',
+    '_m38=1',
+    '',
+    'Transmission Fit:',
+    '',
+    ' _P0=9.1323863212E-02',
+    ' _P1=4.2137768341E-03',
+    ' _P2=-1.3332441405E-5',
+    ' _P3=2.9151001160E-8',
+    ' _P4=-3.4829484108E-11',
+    ' _P5=2.0979046465E-14',
+    ' _P6=-4.9852341527E-18',
+    '',
+    'EXPORT OPTIONS:',
+    '',
+    '_ExportOne=0',
+    '_CorrectOverlap=1',
+    '_SaveCsv=1',
+    '_JunkSize=1.0E8',
+    '',
+    'CORRECTIONS:',
+    '',
+    '_DriftCorrection=0',
+    '_CorrectionON=0',
+    '_NonExtendingDeadTime=15',
+    '_ExtendingDeadTime=1.3',
+    '',
+    'Custom procedure:',
+    '',
+    '_custprocname=PICAB',
+    '',
+    'ACTRIS GAS STANDARD PROTOCOL:',
+    '',
+    '_ApplyProtocol=0',
+    '_TraceNameMarker=DO1',
+    '_MarkerValue=1',
+    '_Duration=8',
+    ''
+]
+
+
+        with open(config.parfile, 'w') as f:
+            f.write('\n'.join(PTRwidParameter))
+
+        print('\n'.join(log))
+    return config.parfile, config.codefile
+
+def create_ptrwid_file_structure(base_path):
+    # Create main directories
+    directories = [
+        'CALIBRATION', 'DATA', 'EXPORT', 'FIGURES', 'LOGS', 'MASSLIST',
+        'PARAMETERS', 'PROTOCOLS', 'RESULTS', 'SCRIPTS', 'TEMP'
+    ]
+    for dir_name in directories:
+        os.makedirs(os.path.join(base_path, dir_name), exist_ok=True)
+
+    # Create subdirectories
+    subdirectories = {
+        'CALIBRATION': ['SENSITIVITY', 'TRANSMISSION'],
+        'DATA': ['RAW', 'PROCESSED'],
+        'EXPORT': ['ASCII', 'HDF5'],
+        'FIGURES': ['CALIBRATION', 'DIAGNOSTICS', 'TIMESERIES'],
+        'LOGS': ['ERRORS', 'PROCESSING'],
+        'MASSLIST': ['CUSTOM', 'DEFAULT'],
+        'PARAMETERS': ['INSTRUMENT', 'PROCESSING'],
+        'PROTOCOLS': ['CUSTOM', 'DEFAULT'],
+        'RESULTS': ['CALIBRATION', 'TIMESERIES'],
+        'SCRIPTS': ['CUSTOM', 'DEFAULT']
+    }
+
+    for parent, children in subdirectories.items():
+        for child in children:
+            os.makedirs(os.path.join(base_path, parent, child), exist_ok=True)
+
+    # Create empty files
+    empty_files = [
+        os.path.join('PARAMETERS', 'INSTRUMENT', 'instrument_parameters.txt'),
+        os.path.join('PARAMETERS', 'PROCESSING', 'processing_parameters.txt'),
+        os.path.join('LOGS', 'ERRORS', 'error_log.txt'),
+        os.path.join('LOGS', 'PROCESSING', 'processing_log.txt')
+    ]
+
+    for file_path in empty_files:
+        with open(os.path.join(base_path, file_path), 'w') as f:
+            pass  # Create an empty file
+
+    print("PTRwid file structure created successfully.")
+
 
 def CompoundClass(formula: str) -> List[str]:
     # Lines 11857-11866: Initialize variables
@@ -553,194 +866,324 @@ def formula(lib: List[List[float]]) -> List[str]:
 
     return form
 
-def get_eng_data(event: Any, file: str) -> Dict[str, Any]:
-    # Line 12262-12263: Initialize info array
-    info: List[str] = [''] * 9
-    info[0] = 'H5 OPEN:'
-
-    # Line 12265-12266: Construct file names
-    file2 = file.replace('.h5', '_PTR.h5')
-    
-    # Line 12267-12269: Initialize error code and result structure
+def get_eng_data(file):
+    info = ['H5 OPEN:']
+    file2 = file[:-3] + '.h5'
     err_code = 0
     s1 = {'duration': -9999}
 
-    # Line 12273-12274: Open HDF5 file
-    with h5py.File(file, 'r') as file_id:
-        print(f'H5 FILE OPEN: {file}')
+    
+    # Line 12260: Open HDF5 file
+    file_id = h5py.File(file, 'r')
+    print(f'H5 FILE OPEN: {file}')
 
-        # Line 12278-12297: Read datasets from file
-        file_1_data = {'n_paths': get_par('#file1')}
-        data_sets = [-1]
-        for i in range(1, get_par('#file1') + 1):
+    err_code = -1
+    file_1_data = {'n_paths': getpar('#file1')}
+    datasets = -1
+
+    # Lines 12265-12270: Read data from the first file
+    print(1, getpar('#file1') + 1)
+    for i in range(1, getpar('#file1') + 1):
+        if err_code != i:
             try:
-                str_nam = f'H1_{i:02d}nam'
-                str_dat = f'H1_{i:02d}dat'
-                if str_nam in file_id:
-                    file_1_data[str_nam] = file_id[str_nam][()]
+                
+                strnam = f"H1_{i:02d}nam" 
+                strdat = f"H1_{i:02d}dat" 
+                if getstr(strnam) != '-9999':
+                    file_1_data[strnam] = file_id[getstr(strnam)]
                 else:
-                    file_1_data[str_nam] = '-9999'
-                file_1_data[str_dat] = file_id[str_dat][()]
-                data_sets.append(i)
+                    file_1_data[strnam] = '-9999'
+                dat = getstr(strdat)
+
+                file_1_data[strdat] = file_id[dat]
+                datasets = np.append(datasets, i)
             except:
-                err_code = [err_code, i]
+                continue
 
-        # Line 12300-12304: Populate info array
-        for i in range(1, len(data_sets)):
-            str_dat = f'H1_{data_sets[i]:02d}dat'
-            info[i] = str_dat
+    # Lines 12272-12274: Extract information from datasets
+    info = [file_1_data[f"H1_{datasets[i]:02d}dat"] for i in range(1, len(datasets))]
 
-        # Line 12306-12307: Set instrument type
-        instrument = 'TOF1000' if '/SPECdata/AverageSpec' in info else 'TOF8000'
+    # Line 12275: Determine instrument type
+    if np.any('/SPECdata/AverageSpec' in s for s in info):
+        instrument = 'TOF1000'
+    else:
+        instrument = 'TOF8000'
 
-        # Line 12311-12324: Read file attributes
-        try:
-            computer_id = 'nix'
-            for attr_name, attr_value in file_id.attrs.items():
-                if 'Computer ID' in attr_name:
-                    computer_id = attr_value
-        except:
-            pass
+    # Lines 12277-12284: Get computer ID and update instrument type
+    # try:
+    computer_id = 'nix'
+    for attr_name, attr_value in file_id.attrs.items():
+        if 'Computer ID' in attr_name:
+            computer_id = attr_value
+    computer_id = computer_id.decode()
+    if '2197a787-6c47-4c78-88d1-28fb6598bcc2' in computer_id:
+        instrument = 'VOCUS'
+    elif '3cef3dd0-f2f5-4216-95dd-9bdb829f125a' in computer_id:
+        instrument = 'VOCUS'
 
-        # Line 12325-12327: Check for VOCUS instrument
-        if '2197a787-6c47-4c78-88d1-28fb6598bcc2' in computer_id or '3cef3dd0-f2f5-4216-95dd-9bdb829f125a' in computer_id:
-            instrument = 'VOCUS'
+    # Lines 12286-12292: Read data from the second file if it exists
+    info = h5py.File(file2, 'r')
+    if info:
+        file_id2 = h5py.File(file2, 'r')
+        file_2_data = {'n_paths': getpar('#file2')}
+        datasets2 = []
 
-        # Line 12333-12354: Read additional file if exists
-        if os.path.exists(file2):
-            with h5py.File(file2, 'r') as file_id2:
-                file_2_data = {'n_paths': get_par('#file2')}
-                data_sets2 = [-1]
-                for i in range(1, get_par('#file2') + 1):
+        for i in range(1, getpar('#file2') + 1):
+            if err_code != i:
+                datasets2 = np.append(datasets2, i)
+                strnam = f"H2_{i:02d}nam" if i <= 9 else f"H2_{i:02d}nam"
+                strdat = f"H2_{i:02d}dat" if i <= 9 else f"H2_{i:02d}dat"
+                if getstr(strnam) != '-9999':
                     try:
-                        str_nam = f'H2_{i:02d}nam'
-                        str_dat = f'H2_{i:02d}dat'
-                        if str_nam in file_id2:
-                            file_2_data[str_nam] = file_id2[str_nam][()]
-                        else:
-                            file_2_data[str_nam] = '-9999'
-                        file_2_data[str_dat] = file_id2[str_dat][()]
-                        data_sets2.append(i)
-                    except:
-                        err_code = [err_code, i]
+                        file_2_data[strnam] = file_id2[getstr(strnam)][()]
+                    except: continue
+                else:
+                    file_2_data[strnam] = '-9999'
+                file_2_data[strdat] = file_id2[getstr(strdat)][()]
 
-        # Line 12358-12445: Extract various parameters
-        if max(data_sets) != -1:
-            # Read file attributes
-            creation_time = file_id.attrs.get('HDF5 File Creation Time', 'nix')
-            
-            if creation_time != 'nix':  # TOF1000
-                cycle_time = float(file_id.attrs['Single Spec Duration (ms)']) / 1000  # in seconds
-                sample_interval = max(float(file_id.attrs['Timebin width (ps)']) / 1e12)  # in seconds
-                single_spectrum_time = float(file_id.attrs['Pulsing Period (ns)']) / 1000  # in microseconds
-                pois_cor = 1
-                pois_dead = 1
-                extractions = max(cycle_time * 1e6 / single_spectrum_time)
-                
-                buf_times = file_1_data[f'H1_{data_sets[1]:02d}DAT'][3, :]
-                buf_times = np.arange(len(buf_times)) * cycle_time + cycle_time
-                sum_spec = file_1_data[f'H1_{data_sets[2]:02d}DAT'] * len(buf_times)
-                computer_id = '-9999'
-                single_ion_signal = 0.1
+    if max(datasets) != -1:
+       
+            n_attr = len(file_id.attrs)
+            mistt = 'nix'
+
+            for j in range(n_attr):
+                attr_name = list(file_id.attrs.keys())[j]
+              
+                if 'HDF5 File Creation Time' in attr_name:
+                    mistt = file_id.attrs[attr_name]
+            CycleTime=500
+            SampleInterval=50000
+            SingleSpectrumTime=10000
+            if mistt != 'nix':  # TOF1000
+                for j in range(n_attr):
+                    attr_name = list(file_id.attrs.keys())[j]
+                    if 'HDF5 File Creation Time' in attr_name:
+                        CreationTime = file_id.attrs[attr_name]
+                    elif 'Single Spec Duration (ms)' in attr_name:
+                        CycleTime = file_id.attrs[attr_name]
+                    elif 'Timebin width (ps)' in attr_name:
+                        SampleInterval = file_id.attrs[attr_name]
+                    elif 'Pulsing Period (ns)' in attr_name:
+                        SingleSpectrumTime = file_id.attrs[attr_name]
+
+                CycleTime = float(CycleTime) / 1000  # in seconds
+                SampleInterval = max([float(SampleInterval)]) / 1e12  # in seconds
+                SingleSpectrumTime = float(SingleSpectrumTime) / 1000  # in microseconds
+
+                poisCor = 1
+                PoisDead = 1
+                # Extractions = int(max(CycleTime * 1e6 / SingleSpectrumTime))
+
+                strdat = f"H1_{datasets[1]:02d}dat"
+                buf_times = file_1_data[strdat][3, :]
+                strdat = f"H1_{datasets[2]:02d}dat"
+                SumSpec = file_1_data[strdat]
+
+                buf_times = np.arange(len(buf_times)) * max([CycleTime]) + max([CycleTime])
+                SumSpec = [()] * len(buf_times)
+                # ComputerID = '-9999'
+                # SingleIonSignal = 0.1
+
             else:  # TOF8000, QiTOF
-                extractions = file_id['NbrWaveforms'][()]
-                creation_time = file_id.attrs['HDF5_FILE_CREATION_TIME']
-                sample_interval = file_id['fullspectra/sampleinterval'][()]
-                pois_cor = file_id['RawData/HPTDC/PoissonCorrect'][()]
-                computer_id = file_id.attrs['COMPUTER_ID']
-                single_ion_signal = file_id['fullspectra/SINGLE_ION_SIGNAL'][()]
-                pois_dead = file_id['RawData/HPTDC/PoissonTdcDeadTime'][()]
-                
-                buf_times = file_1_data[f'H1_{data_sets[1]:02d}DAT']
-                sum_spec = file_1_data[f'H1_{data_sets[2]:02d}DAT']
-                
-                buf_times = buf_times.reshape(-1)
-                time_step = np.median(np.diff(buf_times))
-                buf_times = np.arange(len(buf_times)) * time_step
+                FileStruct = h5py.File(file, 'r')
+                Extractions = FileStruct['NbrWaveforms'][()]
+                CreationTime = FileStruct.attrs['HDF5_FILE_CREATION_TIME']
+                SampleInterval = FileStruct['fullspectra/sampleinterval'][()]
+                poisCor = FileStruct['RawData/HPTDC/PoissonCorrect'][()]
+                ComputerID = FileStruct.attrs['COMPUTER_ID']
+                SingleIonSignal = FileStruct['fullspectra/SINGLE_ION_SIGNAL'][()]
 
-            # Ensure minimum signal threshold
-            min_sig = 222 * max(buf_times)
-            if not np.any(sum_spec > min_sig):
-                raise ValueError("Signal too low")
+                if 'HPTDC' in ''.join(FileStruct['RawData'].keys()):
+                    poisCor = FileStruct['RawData/HPTDC']
+                    PoisDead = poisCor['PoissonTdcDeadTime'][()]
+                    poisCor = poisCor['PoissonCorrect'][()]
+                else:
+                    poisCor = 1
+                    PoisDead = 1
 
-            cycles = len(buf_times)
-            buf_times = buf_times[:cycles]
-            start_time = t09(creation_time)
-            time_row = start_time + buf_times / 86400
+                FileStruct.close()
+    # Lines 12313-12324: Close HDF5 files and handle errors
+    for i in range(1, getpar('#file1') + 1):
+        if err_code != i:
+            strnam = f"H1_{i:02d}nam" 
+            strdat = f"H1_{i:02d}dat" 
+            try:
+                file_id[getstr(strnam)].file.close()
+            except: continue
+    file_id.close()
 
-        # Line 12449-12519: Process engineering data
-        # Process engineering data
-        filt_d = np.where((np.char.startswith(names_ptr, 'p_drift') | np.char.startswith(names_ptr, 'p-Drift')))[0]
-        filt_u1 = np.where(np.char.startswith(names_ptr, 'Udrift'))[0]
-        filt_u2 = np.where((np.char.startswith(names_ptr, 'Uq') | np.char.startswith(names_ptr, 'Udx')))[0]
-        filt_t = np.where((np.char.startswith(names_ptr, 'Drift_Temperature') | np.char.startswith(names_ptr, 'T-Drift')))[0]
+    # if 'file_id2' in locals():
+    #     for i in range(1, getpar('#file2') + 1):
+    #         if err_code != i:
+    #             strnam = f"H2_{i:02d}nam" if i <= 9 else f"H2_{i:02d}nam"
+    #             strdat = f"H2_{i:02d}dat" if i <= 9 else f"H2_{i:02d}dat"
+    #             file_id2[getstr(strnam)].file.close()
+    #             file_id2[getstr(strdat)].file.close()
+    #     file_id2.close()
 
-        cyc = np.zeros((1, cycles))
-        pdrift = data[filt_d, :] if filt_d.size > 0 else cyc + get_par('p_drift_default')
-        mist_ud = data[filt_u1, :][0] if filt_u1.size > 0 else cyc + get_par('u_drift_default')
-        udrift = mist_ud + data[filt_u2, :] if filt_u2.size > 0 else mist_ud + get_par('udx_default')
-        tdrift = data[filt_t, :] + 273.15 if filt_t.size > 0 else cyc + get_par('t_drift_default')
+    # Lines 12326-12348: Extract engineering data
+    file_id2 = h5py.File(file2, 'r')
+    
+    file_2_data = {'n_paths': getpar('#file2')}
+    datasets2 = [-1]
+    
+    for i in range(1, getpar('#file2') + 1):
+        if err_code != i:
+            datasets2.append(i)
+            strnam = f"H2_{i:02d}nam" 
+            strdat = f"H2_{i:02d}dat" 
+            if getstr(strnam) != '-9999':
+                print(getstr(strnam))
+                try:
+                    file_2_data[strnam] = file_id2[getstr(strnam)][()]
+                except:continue
+            else:
+                file_2_data[strnam] = '-9999'
+            file_2_data[strdat] = file_id2[getstr(strdat)][()]
 
-        pdrift = pdrift[0]
-        udrift = udrift[0]
-        tdrift = tdrift[0]
 
-        if np.any(np.char.startswith(names_ptr, get_par('pdriftVOCUS'))):
-            instrument = 'VOCUS'
+    data = [-9999]
+    NamesPTR = np.array([])
 
-        if instrument == 'VOCUS':
-            pdrift = data[np.where(np.char.startswith(names_ptr, get_par('pdriftVOCUS')))[0][-1], :]
-            udrift = data[np.where(np.char.startswith(names_ptr, get_par('udriftVOCUS')))[0][-1], :]
-            tdrift = data[np.where(np.char.startswith(names_ptr, get_par('tdriftVOCUS')))[0][-1], :] + 273.15
+    for i in range(3, max(d(datasets))):
+        strnam = f"H1_{i:02d}nam"
+        strdat = f"H1_{i:02d}dat"
+        keys = list(file_1_data.keys())
+        matches = [check_match(strnam, tag) for tag in keys]
+        
+        NamesP =keys[matches.index(True)]
+        dataP = np.ravel(file_1_data[keys[matches.index(True)]])
+        if max(data) == -9999:
+            data = np.array([dataP])
+            NamesPTR = np.array([NamesP])
+        elif max(dataP) != -9999:
+            data = np.concatenate((data, dataP), axis=0)
+            NamesPTR = np.concatenate((NamesPTR, NamesP), axis=0)
+   
+    if max(d(datasets)) <= 3:
+        NamesPTR = np.array(['pdrift', 'udrift', 'tdrift'])
+        data = np.zeros((3, max(d(buf_times))))
+        data[0, :] += getpar('p_drift_default')
+        data[1, :] += getpar('u_drift_default')
+        data[2, :] += getpar('t_drift_default')
 
-        # Calculate parameters
-        d = get_par('reactionlength')
-        mu0 = get_par('reduced_mobility')
-        mu = mu0 * (1013.25 / pdrift) * (tdrift / 273.15)
-        trxn = d / ((mu * udrift) / d)
-        n_molec = 24.63 * 298 * pdrift / (1013.25 * tdrift)
-        e_over_n = 1e17 * (udrift / d) / (n_molec * 1e18)
+    # Cause an error if highest signal is lower than MIN_SIG
+    #Todo
 
-        names = ['JulianDate', 'ReactionTime[s]', 'N [1E18 molec/cm3]', 'EoverN'] + names_ptr
+    if NamesPTR.ndim == 2:
+        NamesPTR = ' '.join(NamesPTR.T)
 
-        # Remove commas from names
-        for i, name in enumerate(names):
-            names[i] = name.replace(',', '_')
+        print(NamesPTR)
+    cycles = max(buf_times.shape)
+    
+    data = np.transpose(np.array([[np.arange(cycles)], [np.arange(cycles)]]))
+    data = data[:, :cycles]
+    np.append(NamesPTR,['cycles2', 'cycles3'])
 
-        # Adjust time_row and data lengths
-        if time_row.shape[1] > trxn.shape[0]:
-            time_row = time_row[:, :trxn.shape[0]]
-        elif time_row.shape[1] < trxn.shape[0]:
-            hlpp = np.zeros((1, trxn.shape[0]))
-            hlpp[0, :time_row.shape[1]] = time_row
-            time_row = hlpp
 
-        data = np.vstack((time_row, trxn, n_molec, e_over_n, data))
+    # buf_times=buf_times[0:cycles-1]
+    # buf_times = buf_times[:cycles-1]
 
-        # Line 12523-12583: Create and return result structure
-        s1 = {
-            'names': names,
-            'data': data.T,
-            'FileName': file,
-            'SumSpec': sum_spec,
-            'cycles': cycles,
-            'duration': max(buf_times),
-            'pdrift': pdrift,
-            'udrift': udrift,
-            'tdrift': tdrift,
-            'StartTime': start_time,
-            'SampInt': sample_interval,
-            'extractions': extractions,
-            'PoisCor': pois_cor,
-            'PoisDead': pois_dead,
-            'instrument': instrument,
-            'ComputerID': computer_id,
-            'SingleIonSignal': single_ion_signal
-        }
+    # buf_times=reform(buf_times,1,cycles,/overwrite)
+    buf_times = np.reshape(buf_times, (1, cycles))
+
+    # ;t09, time in days since 1.1.2009, 00:00:00
+    # StartTime=t09(CreationTime)
+    # TimeRow=StartTime+buf_times/86400
+
+    # ;reaction time, E/N
+    filtD = [i for i, name in enumerate(NamesPTR) if 'p_drift' in name or 'p-Drift' in name]
+    filtU1 = [i for i, name in enumerate(NamesPTR) if 'Udrift' in name]
+    filtU2 = [i for i, name in enumerate(NamesPTR) if 'Uq' in name or 'Udx' in name]
+    filtT = [i for i, name in enumerate(NamesPTR) if 'Drift_Temperature' in name or 'T-Drift' in name]
+
+    # Cyc=reform(fltarr(cycles),1,cycles,/overwrite)
+    Cyc = np.zeros((1, cycles))
+
+    # if(max(filtD) gt -0.5) then pdrift=data[filtD,*] else pdrift=cyc+max(getpar('p_drift_default'))
+    if max(filtD) > -0.5:
+        pdrift = data[filtD, :]
+    else:
+        pdrift = Cyc + max(getpar('p_drift_default'))
+
+    # if(max(filtU1) gt -0.5) then begin
+    #         mistUD=data[filtU1,*]
+    #         mistUD=mistUD[0,*]
+    # endif else  mistUD=cyc+max(getpar('u_drift_default'))
+    if max(filtU1) > -0.5:
+        mistUD = data[filtU1, :][0, :]
+    else:
+        mistUD = Cyc + max(getpar('u_drift_default'))
+
+    # if(max(filtU2) gt -0.5) then  udrift=mistUD+data[filtU2,*]  else udrift=mistUD+max(getpar('udx_default'))
+    if max(filtU2) > -0.5:
+        udrift = mistUD + data[filtU2, :]
+    else:
+        udrift = mistUD + max(getpar('udx_default'))
+
+    # if(max(filtT) gt -0.5) then  tdrift=data[filtT,*]+273.15 else begin
+    #   tdrift=cyc+max(getpar('t_drift_default'))
+    #    endelse
+    if max(filtT) > -0.5:
+        tdrift = data[filtT, :] + 273.15
+    else:
+        tdrift = Cyc + max(getpar('t_drift_default'))
+
+    # pdrift=pdrift[0,*]
+    # udrift=udrift[0,*]
+    # tdrift=tdrift[0,*]
+    pdrift = pdrift[0, :]
+    udrift = udrift[0, :]
+    tdrift = tdrift[0, :]
+
+    # if(max(where(strmatch(NamesPTR,getstr('pdriftVOCUS')) eq 1)) gt -0.5) then instrument='VOCUS'
+    if max([i for i, name in enumerate(NamesPTR) if 'pdriftVOCUS' in name]) > -0.5:
+        instrument = 'VOCUS'
+
+    # if(strmatch('VOCUS', instrument) eq 1) then pdrift=data[max(where(strmatch(NamesPTR,getstr('pdriftVOCUS')) eq 1)),*]
+    if 'VOCUS' in instrument:
+        pdrift_idx = max([i for i, name in enumerate(NamesPTR) if 'pdriftVOCUS' in name])
+        pdrift = data[pdrift_idx, :]
+
+    # if(strmatch('VOCUS', instrument) eq 1) then udrift=data[max(where(strmatch(NamesPTR,getstr('udriftVOCUS')) eq 1)),*]
+    if 'VOCUS' in instrument:
+        udrift_idx = max([i for i, name in enumerate(NamesPTR) if 'udriftVOCUS' in name])
+        udrift = data[udrift_idx, :]
+
+    # if(strmatch('VOCUS', instrument) eq 1) then tdrift=data[max(where(strmatch(NamesPTR,getstr('tdriftVOCUS')) eq 1)),*]+273.15
+    if 'VOCUS' in instrument:
+        tdrift_idx = max([i for i, name in enumerate(NamesPTR) if 'tdriftVOCUS' in name])
+        tdrift = data[tdrift_idx, :] + 273.15
+
+    s1 = {
+        'names': names,
+        'data': data.T,
+        'FileName': file,
+        'SumSpec': sum_spec,
+        'cycles': cycles,
+        'duration': max(buf_times),
+        'pdrift': pdrift,
+        'udrift': udrift,
+        'tdrift': tdrift,
+        'StartTime': start_time,
+        'SampInt': sample_interval,
+        'extractions': extractions,
+        'PoisCor': pois_cor,
+        'PoisDead': pois_dead,
+        'instrument': instrument,
+        'ComputerID': computer_id,
+        'SingleIonSignal': single_ion_signal
+    }
+
+    # except Exception as e:
+    #     print(f'No data could be found in H5 file: {e}')
+    #     s1 = None
 
     return s1
 
+
 def GetFileExport(event: Dict, destfolder: str, Name1: str) -> Dict[str, Union[List[float], List[List[float]], float, List[float]]]:
+
     # Lines 12589-12598: Get values from widgets
     massFL = event['Label_6']['uVALUE']
     massUL = event['Label_7']['uVALUE']
@@ -761,14 +1204,14 @@ def GetFileExport(event: Dict, destfolder: str, Name1: str) -> Dict[str, Union[L
         # Load data from files
         massUL = read_csv(os.path.join(destfolder, f'Export/UL/IonList/MassIDs_{Name1}UL.csv'))
         massFL = read_csv(os.path.join(destfolder, f'Export/FL/IonList/MassIDs_{Name1}FL.csv'))
-        corrcpsUL = read_float(os.path.join(destfolder, f'Export/UL/cps/ocorr/corrcps{Name1}UL.fdt'))
-        cpsUL = read_float(os.path.join(destfolder, f'Export/UL/cps/cps{Name1}UL.fdt'))
-        corrcpsFL = read_float(os.path.join(destfolder, f'Export/FL/cps/ocorr/corrcps{Name1}FL.fdt'))
-        cpsFL = read_float(os.path.join(destfolder, f'Export/FL/cps/cps{Name1}FL.fdt'))
-        corrppbUL = read_float(os.path.join(destfolder, f'Export/UL/ppb/ocorr/corrppb{Name1}UL.fdt'))
-        ppbUL = read_float(os.path.join(destfolder, f'Export/UL/ppb/ppb{Name1}UL.fdt'))
-        corrppbFL = read_float(os.path.join(destfolder, f'Export/FL/ppb/ocorr/corrppb{Name1}FL.fdt'))
-        ppbFL = read_float(os.path.join(destfolder, f'Export/FL/ppb/ppb{Name1}FL.fdt'))
+        corrcpsUL = ReadFloat(os.path.join(destfolder, f'Export/UL/cps/ocorr/corrcps{Name1}UL.fdt'))
+        cpsUL = ReadFloat(os.path.join(destfolder, f'Export/UL/cps/cps{Name1}UL.fdt'))
+        corrcpsFL = ReadFloat(os.path.join(destfolder, f'Export/FL/cps/ocorr/corrcps{Name1}FL.fdt'))
+        cpsFL = ReadFloat(os.path.join(destfolder, f'Export/FL/cps/cps{Name1}FL.fdt'))
+        corrppbUL = ReadFloat(os.path.join(destfolder, f'Export/UL/ppb/ocorr/corrppb{Name1}UL.fdt'))
+        ppbUL = ReadFloat(os.path.join(destfolder, f'Export/UL/ppb/ppb{Name1}UL.fdt'))
+        corrppbFL = ReadFloat(os.path.join(destfolder, f'Export/FL/ppb/ocorr/corrppb{Name1}FL.fdt'))
+        ppbFL = ReadFloat(os.path.join(destfolder, f'Export/FL/ppb/ppb{Name1}FL.fdt'))
 
         # Update widget values
         event['Label_6']['uVALUE'] = massFL
@@ -848,46 +1291,53 @@ def getPrimIons(masses: np.ndarray, cps: np.ndarray, mode: int) -> Dict[str, np.
 def getpar(par_name: str) -> Union[float, str]:
     # Line 12673: Construct the parameter name pattern
     par_name2 = f'_{par_name}='
-    
+    print(par_name)
     # Lines 12674-12677: Read the parfile path
-    with open('C:/PTRwid/parfile.txt', 'r') as lun:
-        path = lun.readline().strip()
+    with open(config.parfile, 'r') as lun:
+        # path = lun.readlines().strip()
     
-    # Line 12678: Read the parameter file content
-    with open(path, 'r') as f:
-        ptrwidpar = f.readlines()
-    
+    # # Line 12678: Read the parameter file content
+    # with open(path, 'r') as f:
+        ptrwidpar = lun.readlines()
     # Line 12679: Find the row index of the parameter
     row_index = next((i for i, line in enumerate(ptrwidpar) if par_name2 in line), -1)
-    
     if row_index == -1:
         return None  # Parameter not found
     
     # Lines 12680-12681: Extract the value part of the parameter
     line = ptrwidpar[row_index]
-    value_start = line.index('=') + 1
-    value_str = line[value_start:].strip()
-    
+    value_start = line.split('=')[1]
+    value_str = value_start.strip()
     # Line 12682: Convert to float if possible, otherwise return as string
     try:
-        return float(value_str)
+        print(value_str)
+        return int(value_str)
     except ValueError:
-        return value_str
+        print(ValueError)
+        return str(value_str)
 
 def getstr(par_name: str) -> str:
     # Line 12687: Construct parameter name with underscore prefix and equals sign
     par_name2 = f'_{par_name}='
 
+   
     # Lines 12688-12691: Read the parfile path from C:/PTRwid/parfile.txt
-    with open('C:/PTRwid/parfile.txt', 'r') as lun:
-        path = lun.readline().strip()
+    
+    with open(os.path.join(config.base_dir,'parfile.txt'), 'r') as lun:
+        path = lun.readline().strip().strip('\n')
 
     # Line 12692: Read the parameter file content
     with open(path, 'r') as f:
         ptrwidpar = f.readlines()
-
+    
+    
+    row_index=-9999
     # Line 12693: Find the row index where the parameter name matches
-    row_index = next(i for i, line in enumerate(ptrwidpar) if par_name2 in line)
+    for i, line in enumerate(ptrwidpar):
+        print(par_name2, line)
+        if par_name2 in line.strip().strip('\n'):
+            row_index = i
+            break
 
     # Lines 12694-12695: Find the position of the equals sign in the matching line
     line_index = ptrwidpar[row_index].index('=') + 1
@@ -897,6 +1347,8 @@ def getstr(par_name: str) -> str:
 
     # Line 12697: Return the trimmed string value
     return str_value
+
+
 
 def get_inst_id() -> str:
     """
@@ -1183,8 +1635,7 @@ def m2t(value: Union[float, np.ndarray], a: float, t0: float, ex: float, SampInt
     """
     
     # Lines 13004-13005: Check if SampInt is defined
-    if 'SampInt' not in locals():
-        SampInt = 1e-10
+    SampInt = 1e-10
 
     # Lines 13010-13016: Determine conversion direction based on keywords
     if time:
@@ -1401,7 +1852,7 @@ def ReadFloat(file: str) -> Union[List[float], float]:
         else:
             data2 = data2[2]
     else:
-        data2 = -9999
+        data2 = [-9999]
     
     return data2
 
@@ -1504,7 +1955,7 @@ def t09(CreationTime: str, format6: bool = False) -> float:
             try:
                 dt = datetime.strptime(CreationTime, "%d/%m/%Y %H:%M:%S")
             except ValueError:
-                dt = datetime.strptime(CreationTime, "%m/%d/%Y %H:%M:%S")
+                dt = datetime.strptime(CreationTime, "%m/%d/%Y, %H:%M:%S")
     elif '-' in CreationTime and not format6:
         # Format 2
         dt = datetime.strptime(CreationTime, "%d-%b-%y %I:%M:%S %p")
@@ -1607,3 +2058,45 @@ def kml(compound_name: str, startTIME: str, endTIME: str) -> None:
 
 
 
+def makefloat(name, data):
+    # Line 3: Reshape the data
+    data = np.array(data).reshape(-1)
+    
+    # Lines 5-6: Get dimensions
+    n_dim = data.ndim
+    dim = data.shape
+    
+    # Lines 8-9: Calculate total number of elements
+    ind = np.prod(dim)
+    
+    # Lines 11-12: Open file for writing
+    with open(name, 'w') as file:
+        # Line 13: Write dimensions and data
+        file.write(f"{n_dim}\n")
+        file.write(" ".join(map(str, dim)) + "\n")
+        np.savetxt(file, data.reshape(ind), fmt='%.9E')
+   
+def deriv(y, x=None):
+    n = len(y)
+    if x is None:
+        # Evenly spaced case
+        d = np.zeros_like(y)
+        d[1:-1] = (y[2:] - y[:-2]) / 2
+        d[0] = (-3*y[0] + 4*y[1] - y[2]) / 2
+        d[-1] = (3*y[-1] - 4*y[-2] + y[-3]) / 2
+    else:
+        # Unevenly spaced case
+        d = np.zeros_like(y)
+        for i in range(1, n-1):
+            x01, x02, x12 = x[i-1]-x[i], x[i-1]-x[i+1], x[i]-x[i+1]
+            d[i] = y[i-1]*x12/(x01*x02) + y[i]*(1/x12 - 1/x01) - y[i+1]*x01/(x02*x12)
+        
+        # First point
+        x01, x02, x12 = x[0]-x[1], x[0]-x[2], x[1]-x[2]
+        d[0] = y[0]*(x01 + x02)/(x01*x02) - y[1]*x02/(x01*x12) + y[2]*x01/(x02*x12)
+        
+        # Last point
+        x01, x02, x12 = x[-3]-x[-2], x[-3]-x[-1], x[-2]-x[-1]
+        d[-1] = -y[-3]*x12/(x01*x02) + y[-2]*x02/(x01*x12) - y[-1]*(x02 + x12)/(x02*x12)
+    
+    return d

@@ -1,0 +1,14 @@
+name: vocus
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - h5py
+  - matplotlib
+  - scipy
+  - pandas
+  - pytest
+  - pip
+
